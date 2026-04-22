@@ -3,6 +3,7 @@ import 'package:data_loop/Views/UserScreen/Profil.dart';
 import 'package:data_loop/Views/UserScreen/TachesScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../Constantes/Couleurs.dart';
 
@@ -29,7 +30,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       backgroundColor: Couleurs.primaryGreen,
       appBar: AppBar(title: Text("DataLoop",style: TextStyle(
           color: Colors.white,
-          fontWeight: FontWeight.bold,fontSize: 25
+          fontWeight: FontWeight.bold,fontSize: 25.sp
       ),),automaticallyImplyLeading: false,backgroundColor: Couleurs.darkGreen,),
       body: SafeArea(child: pages[index]),
       bottomNavigationBar: BottomNavigationBar(

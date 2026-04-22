@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../Constantes/Couleurs.dart';
 
@@ -33,13 +34,13 @@ class _TachesscreenState extends State<Tachesscreen> {
           children: [
             //Intitulé de l'écran
             Padding(
-              padding: const EdgeInsets.only(left: 10, top: 10),
+              padding: EdgeInsets.only(left: 10.w, top: 10.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Bienvenu(e) dans la section Annotation",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
 
                   Text(
@@ -54,7 +55,7 @@ class _TachesscreenState extends State<Tachesscreen> {
             ),
             //Image à annoter
             Padding(
-              padding: const EdgeInsets.all(15),
+              padding: EdgeInsets.all(15.w),
               child: ClipRRect(
                 child: Image.network(
                   "url de l'image à  afficher",
@@ -66,10 +67,10 @@ class _TachesscreenState extends State<Tachesscreen> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(18.r),
                             color: Colors.grey[300],
                           ),
-                          height: 300,
+                          height: 300.h,
                           width: double.maxFinite,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -91,17 +92,17 @@ class _TachesscreenState extends State<Tachesscreen> {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 5.h),
             Center(
               child: Text(
                 "Que voyez-vous sur cette image ?",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
             ),
 
             //Proposition de reponse
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding:  EdgeInsets.symmetric(horizontal: 15.w),
               child: SizedBox(
                 height: 50,
                 child: ListView.builder(
@@ -109,7 +110,7 @@ class _TachesscreenState extends State<Tachesscreen> {
                   physics: ScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      padding:  EdgeInsets.symmetric(horizontal: 2.w),
                       child: GestureDetector(
                         onTap: () {
                           if (mounted) {
@@ -139,7 +140,7 @@ class _TachesscreenState extends State<Tachesscreen> {
                             ),
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(12),
+                            borderRadius: BorderRadiusGeometry.circular(12.r),
                           ),
                         ),
                       ),
@@ -151,7 +152,7 @@ class _TachesscreenState extends State<Tachesscreen> {
             ),
             //Boutons de validation
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding:  EdgeInsets.symmetric(horizontal: 15.w),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -172,7 +173,7 @@ class _TachesscreenState extends State<Tachesscreen> {
                             child: Text(
                               "Annuler ma reponse",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),
@@ -185,7 +186,7 @@ class _TachesscreenState extends State<Tachesscreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Couleurs.grey,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                         ),
@@ -204,7 +205,7 @@ class _TachesscreenState extends State<Tachesscreen> {
                             child: Text(
                               "Valider ma reponse",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),

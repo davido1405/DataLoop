@@ -1,5 +1,6 @@
 import 'package:data_loop/Views/DashboardScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 
@@ -29,22 +30,22 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 100),
+                SizedBox(height: 100.h),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(18.r),
                     boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 0.5)],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20.w),
                     child: Column(
                       children: [
                         Container(
@@ -54,20 +55,20 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                           ),
                           child: Lottie.asset(
                             "assets/lotties/Number Phone icon.json",
-                            width: 500,
-                            height: 250,
+                            width: 500.w,
+                            height: 250.h,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         Text(
                           "Veuillez saisir le code OTP reçu",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.grey[500],
-                            fontSize: 18,
+                            fontSize: 18.sp,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         Pinput(
                           length: 6,
                           obscureText: true,
@@ -75,7 +76,7 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                           keyboardType: TextInputType.number,
                           controller: _controllerOTP,
                         ),
-                        SizedBox(height: 12),
+                        SizedBox(height: 12.h),
                         Row(
                           children: [
                             Expanded(
@@ -92,7 +93,7 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                                 style: TextButton.styleFrom(
                                   backgroundColor: Couleurs.accentOrange,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                 ),
                                 child: Text(
@@ -100,7 +101,7 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                    fontSize: 18.sp,
                                   ),
                                 ),
                               ),
@@ -111,9 +112,9 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35),
+                  padding: EdgeInsets.symmetric(horizontal: 35.w),
                   child: Row(
                     children: [
                       Expanded(
@@ -126,7 +127,7 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                                   child: Text("Code non reçu ?"),
                                 ),
                               ),
-                              SizedBox(width: 5),
+                              SizedBox(width: 5.w),
                               Expanded(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,

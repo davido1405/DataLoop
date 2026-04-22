@@ -1,6 +1,7 @@
 import 'package:data_loop/Views/UserScreen/HistoriqueGains.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../Constantes/Couleurs.dart';
 import '../../Models/Taches.dart';
@@ -28,7 +29,7 @@ class _AccueilState extends State<Accueil> {
             children: [
               //Carte du solde
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10.w),
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -36,13 +37,13 @@ class _AccueilState extends State<Accueil> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                     boxShadow: [
                       BoxShadow(color: Colors.black, blurRadius: 0.5),
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding: EdgeInsets.all(15.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -51,7 +52,7 @@ class _AccueilState extends State<Accueil> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
-                            fontSize: 18,
+                            fontSize: 18.sp,
                           ),
                         ),
                         Text(
@@ -59,7 +60,7 @@ class _AccueilState extends State<Accueil> {
                           style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w400,
-                            fontSize: 18,
+                            fontSize: 18.sp,
                           ),
                         ),
                         Text(
@@ -67,10 +68,10 @@ class _AccueilState extends State<Accueil> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 35,
+                            fontSize: 35.sp,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         Row(
                           children: [
                             Expanded(
@@ -83,7 +84,7 @@ class _AccueilState extends State<Accueil> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 20,
+                                    fontSize: 20.sp,
                                   ),
                                 ),
                                 icon: Icon(
@@ -117,7 +118,7 @@ class _AccueilState extends State<Accueil> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 18,
+                                      fontSize: 18.sp,
                                     ),
                                   ),
                                   subtitle: Text(
@@ -125,7 +126,7 @@ class _AccueilState extends State<Accueil> {
                                     style: TextStyle(
                                       color: Colors.grey[400],
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 15,
+                                      fontSize: 15.sp,
                                     ),
                                   ),
                                   trailing: Icon(
@@ -142,23 +143,23 @@ class _AccueilState extends State<Accueil> {
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               //Résumé tâches
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Row(
                   children: [
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
                           color: Couleurs.primaryGreen,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                           boxShadow: [
                             BoxShadow(color: Colors.black, blurRadius: 0.5),
                           ],
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(15),
+                          padding: EdgeInsets.all(15.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -166,14 +167,14 @@ class _AccueilState extends State<Accueil> {
                                 "Tâches réalisées",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 18,
+                                  fontSize: 18.sp,
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
                                 "47 tâches",
                                 style: TextStyle(
-                                  fontSize: 35,
+                                  fontSize: 35.sp,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -181,7 +182,7 @@ class _AccueilState extends State<Accueil> {
                               Text(
                                 "Depuis votre inscription",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 18.sp,
                                   color: Colors.grey[400],
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -194,10 +195,10 @@ class _AccueilState extends State<Accueil> {
                   ],
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               //Progression des tâches
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.w),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
@@ -209,17 +210,17 @@ class _AccueilState extends State<Accueil> {
                         value: 60 / 100, //A dynamiser
                         color: Couleurs.accentOrange,
                         backgroundColor: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                         minHeight: 15,
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 5.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Progression vers le prochain niveau",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey[600],
                             ),
@@ -227,7 +228,7 @@ class _AccueilState extends State<Accueil> {
                           Text(
                             "10/25",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey[600],
                             ),
@@ -238,14 +239,14 @@ class _AccueilState extends State<Accueil> {
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               //CTA commencer une tâche
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding:  EdgeInsets.symmetric(horizontal: 10.w),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Couleurs.darkGreen,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(18.r),
                     boxShadow: [
                       BoxShadow(color: Colors.black, blurRadius: 0.5),
                     ],
@@ -254,10 +255,10 @@ class _AccueilState extends State<Accueil> {
                     leading: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)
+                          borderRadius: BorderRadius.circular(10.r)
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.w),
                         child: Icon(
                           CupertinoIcons.lightbulb_fill,
                           color: Couleurs.accentOrange,size: 25,
@@ -268,20 +269,20 @@ class _AccueilState extends State<Accueil> {
                       "Astuce",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.white,
                       ),
                     ),
                     subtitle: Text(
                       "Rendez-vous dans 'Tâches' sur la barre de navigation pour démarrer une nouvelle tâche 😉",style: TextStyle(
-                      color: Colors.grey[200],fontSize: 18,fontWeight: FontWeight.w500
+                      color: Colors.grey[200],fontSize: 18.sp,fontWeight: FontWeight.w500
                     ),
                     ),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:  EdgeInsets.all(8.0.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -289,11 +290,11 @@ class _AccueilState extends State<Accueil> {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: Colors.grey[600],
-                        fontSize: 18,
+                        fontSize: 18.sp,
                       ),),
                     listeTaches.isEmpty
                         ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 5),
+                          padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 5.w),
                           child: Center(child: emptyTacheCard()),
                         )
                         : ListView.builder(
@@ -328,17 +329,17 @@ Widget cardTache(Taches tache) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.grey[500],
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12.r),
     ),
     child: Row(
       children: [
         Container(
           decoration: BoxDecoration(
             color: Colors.blue,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:  EdgeInsets.all(8.0.w),
             child: Icon(CupertinoIcons.ticket_fill, color: Colors.white),
           ),
         ),
@@ -355,11 +356,11 @@ Widget emptyTacheCard() {
   return Container(
     decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(18.r),
       boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 0.8)]
     ),
     child: Padding(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(25.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -367,10 +368,10 @@ Widget emptyTacheCard() {
           Container(
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(18),
+              padding: EdgeInsets.all(18.w),
               child: Icon(CupertinoIcons.clear_circled, color: Colors.grey[600],size: 30,),
             ),
           ),
@@ -378,13 +379,13 @@ Widget emptyTacheCard() {
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.grey[600],
-              fontSize: 18,
+              fontSize: 18.sp,
             ),),
           Text("Veuillez commencez une tâche à l'écran 'Tâches' sur la barre de navigation",
             style: TextStyle(
               fontWeight: FontWeight.w400,
               color: Colors.grey[600],
-              fontSize: 19,
+              fontSize: 19.sp,
             ),textAlign: TextAlign.center,),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:data_loop/Views/AuthScreens/ConfirmerNumeroScreen.dart';
 import 'package:data_loop/Views/AuthScreens/ConnexionScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Inscriptionscreen extends StatefulWidget {
   const Inscriptionscreen({super.key});
@@ -18,42 +19,42 @@ class _InscriptionscreenState extends State<Inscriptionscreen> {
       backgroundColor: Couleurs.lightGreen,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical:125,horizontal: 10),
+          padding: EdgeInsets.symmetric(vertical:125.h,horizontal: 10.w),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClipRRect(child: Image.asset("assets/images/DataLoop3.png",width: 250,),),
-                SizedBox(height: 20,),
+                ClipRRect(child: Image.asset("assets/images/DataLoop3.png",width: 250.w,),),
+                SizedBox(height: 20.h,),
                 Text(
                   "Bienvenu(e) sur DataLoop",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.sp),
                 ),
                 Text(
                   "La première plateforme de Crowdsourcing ivoirienne",
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     color: Colors.grey[500],
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(18.r),
                     boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 0.5)],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20.w),
                     child: Column(
                       children: [
                         Text("Inscription",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25),),
-                        SizedBox(height: 10),
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.sp),),
+                        SizedBox(height: 10.h),
                         TextField(
                           keyboardType: TextInputType.text,
                           scrollPhysics: ScrollPhysics(),
@@ -67,22 +68,22 @@ class _InscriptionscreenState extends State<Inscriptionscreen> {
                               ),
                             ),
                           ),
-                        ),SizedBox(height: 10,),
+                        ),SizedBox(height: 10.h,),
                         TextField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: 'Numéro de télépghone',
                             prefixText: '+225',
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                               borderSide: BorderSide(
                                 color: Colors.grey,
-                                width: 0.5,
+                                width: 0.5.w,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 15,),
+                        SizedBox(height: 15.h,),
                         Row(
                           children: [
                             Expanded(
@@ -110,17 +111,17 @@ class _InscriptionscreenState extends State<Inscriptionscreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h,),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(5.r),
                       boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 0.5)],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -131,7 +132,7 @@ class _InscriptionscreenState extends State<Inscriptionscreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text("Déjà un compte?"),
-                                  SizedBox(width: 10,),
+                                  SizedBox(width: 10.w,),
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
