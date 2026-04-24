@@ -9,23 +9,97 @@ class Annotationrepository {
   String get baseUrl => ApiConfig.baseUrl;
 
   Future<Taches?> recupererTaches() async {
-    final url = Uri.parse("$baseUrl/api/v1/tasks/next");
+    final url = Uri.parse("$baseUrl/api/v1/tasks/next?count=1");
     final response = await get(
       url,
       headers: await ApiConfig.authHeaders(),
     );
+
+    if (response.statusCode == 401) {
+      throw Exception("Session expirée. Veuillez vous reconnecter.");
+    }
+
     if (response.statusCode == 200) {
-      final donnee = jsonDecode(response.body) as Map<String, dynamic>;
-      final taskJson = donnee['task'];
-      final tasksJson = donnee['tasks'];
+      final tache = _taskFromPayload(jsonDecode(response.body));
+      if (tache != null) {
+        return tache;
+      }
+    }
 
-      if (taskJson is Map) {
-        return Taches.fromJson(Map<String, dynamic>.from(taskJson));
+    return _recupererTacheDepuisListe();
+  }
+
+  Future<Taches?> _recupererTacheDepuisListe() async {
+    final headers = await ApiConfig.authHeaders();
+    final urls = [
+      "$baseUrl/api/v1/tasks?status=nouvelle&per_page=20",
+      "$baseUrl/api/v1/tasks?status=en_cours&per_page=20",
+    ];
+
+    for (final taskUrl in urls) {
+      final response = await get(Uri.parse(taskUrl), headers: headers);
+
+      if (response.statusCode == 401) {
+        throw Exception("Session expirée. Veuillez vous reconnecter.");
       }
 
-      if (tasksJson is List && tasksJson.isNotEmpty && tasksJson.first is Map) {
-        return Taches.fromJson(Map<String, dynamic>.from(tasksJson.first));
+      if (response.statusCode != 200) {
+        continue;
       }
+
+      final tache = _taskFromPayload(jsonDecode(response.body));
+      if (tache != null) {
+        return tache;
+      }
+    }
+
+    return null;
+  }
+
+  Taches? _taskFromPayload(dynamic payload) {
+    final payloadMap = _mapFrom(payload);
+    if (payloadMap == null) {
+      return null;
+    }
+
+    final directTask = _mapFrom(
+      payloadMap['task'] ?? payloadMap['tache'],
+    );
+    if (directTask != null) {
+      return Taches.fromJson(directTask);
+    }
+
+    final tasks = _taskFromList(payloadMap['tasks']);
+    if (tasks != null) {
+      return tasks;
+    }
+
+    return _taskFromList(payloadMap['data']);
+  }
+
+  Taches? _taskFromList(dynamic value) {
+    final items = value is Map ? value['data'] : value;
+
+    if (items is! List) {
+      return null;
+    }
+
+    for (final item in items) {
+      final taskMap = _mapFrom(item);
+      if (taskMap != null) {
+        return Taches.fromJson(taskMap);
+      }
+    }
+
+    return null;
+  }
+
+  Map<String, dynamic>? _mapFrom(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return value;
+    }
+    if (value is Map) {
+      return Map<String, dynamic>.from(value);
     }
     return null;
   }
