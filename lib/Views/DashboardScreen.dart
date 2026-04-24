@@ -15,11 +15,10 @@ class Dashboardscreen extends StatefulWidget {
 }
 
 class _DashboardscreenState extends State<Dashboardscreen> {
-
   int index = 0;
-  void changerIndex(int nouvelIndex){
+  void changerIndex(int nouvelIndex) {
     setState(() {
-      index=nouvelIndex;
+      index = nouvelIndex;
     });
   }
 
@@ -28,10 +27,17 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     final List<Widget> pages = [Accueil(), Tachesscreen(), Profil()];
     return Scaffold(
       backgroundColor: Couleurs.primaryGreen,
-      appBar: AppBar(title: Text("DataLoop",style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,fontSize: 25.sp
-      ),),automaticallyImplyLeading: false,backgroundColor: Couleurs.darkGreen,),
+      appBar: AppBar(
+        title: Text(
+          "DataLoop",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 25.sp),
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Couleurs.darkGreen,
+      ),
       body: SafeArea(child: pages[index]),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Couleurs.darkGreen,
@@ -41,24 +47,44 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         showSelectedLabels: true,
         showUnselectedLabels: false,
         selectedItemColor: Colors.white,
-        selectedLabelStyle: TextStyle(
-          fontWeight: FontWeight.bold
-        ),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house_alt,color: Couleurs.primaryGreen,size: 25,),
-            activeIcon: Icon(CupertinoIcons.house_alt_fill,color: Colors.white,size: 28,),
-            label: "Accueil"
-          ),
+              icon: Icon(
+                CupertinoIcons.house_alt,
+                color: Couleurs.primaryGreen,
+                size: 25,
+              ),
+              activeIcon: Icon(
+                CupertinoIcons.house_alt_fill,
+                color: Colors.white,
+                size: 28,
+              ),
+              label: "Accueil"),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.square_list,color: Couleurs.primaryGreen,size: 25,),
-            activeIcon: Icon(CupertinoIcons.square_list_fill,color: Colors.white,size: 28,),
-            label: "Tâches"
-          ),
+              icon: Icon(
+                CupertinoIcons.square_list,
+                color: Couleurs.primaryGreen,
+                size: 25,
+              ),
+              activeIcon: Icon(
+                CupertinoIcons.square_list_fill,
+                color: Colors.white,
+                size: 28,
+              ),
+              label: "Tâches"),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person_circle,color: Couleurs.primaryGreen,size: 25,),
-              activeIcon: Icon(CupertinoIcons.person_circle_fill,color: Colors.white,size: 28,),
-              label: "Profil",
+            icon: Icon(
+              CupertinoIcons.person_circle,
+              color: Couleurs.primaryGreen,
+              size: 25,
+            ),
+            activeIcon: Icon(
+              CupertinoIcons.person_circle_fill,
+              color: Colors.white,
+              size: 28,
+            ),
+            label: "Profil",
           ),
         ],
       ),

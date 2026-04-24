@@ -16,7 +16,7 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async{
+    Future.microtask(() async {
       await initialisationConnexion();
     });
   }
@@ -35,7 +35,7 @@ class _SplashscreenState extends State<Splashscreen> {
         );
       }
     } else {
-      if (auth.numeroSauvegarder!=null) {
+      if (auth.numeroSauvegarder != null) {
         if (mounted) {
           Navigator.pushAndRemoveUntil(
             context,

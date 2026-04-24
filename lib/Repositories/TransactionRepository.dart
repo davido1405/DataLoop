@@ -1,3 +1,1 @@
-class Transactionrepository {
-
-}
+class Transactionrepository {}

@@ -1,5 +1,4 @@
 import 'package:data_loop/Views/AuthScreens/InscriptionScreen.dart';
-import 'package:data_loop/Views/AuthScreens/RecoverPin.dart';
 import 'package:data_loop/Views/DashboardScreen.dart';
 import 'package:data_loop/ViewsModels/AuthViewModel.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +25,9 @@ class _ConnexionscreenState extends State<Connexionscreen> {
     final auth = context.read<Authviewmodel>();
     try {
       await auth.seConnecter(_controllerPin.text);
+      if (!mounted) {
+        return;
+      }
       if (auth.errrorMessage == null) {
         Navigator.pushAndRemoveUntil(
           context,
@@ -108,9 +110,8 @@ class _ConnexionscreenState extends State<Connexionscreen> {
                               color: Couleurs.emergencyRed,
                             ),
                           ),
-
                         Text(
-                          "Veuillez saisir votre pin à 6 chiffres",
+                          "Veuillez saisir votre pin à 8 chiffres",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.grey[400],
@@ -118,7 +119,7 @@ class _ConnexionscreenState extends State<Connexionscreen> {
                         ),
                         SizedBox(height: 10.h),
                         Pinput(
-                          length: 6,
+                          length: 8,
                           obscureText: true,
                           obscuringCharacter: "●",
                           keyboardType: TextInputType.number,
@@ -150,6 +151,24 @@ class _ConnexionscreenState extends State<Connexionscreen> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 8.h),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Recoverpin(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Code PIN oublié ?",
+                            style: TextStyle(
+                              color: Couleurs.accentOrange,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -171,34 +190,29 @@ class _ConnexionscreenState extends State<Connexionscreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Center(
-                            child: Expanded(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("Pas encore de compte?"),
-                                  SizedBox(width: 10.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              Inscriptionscreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      "S'inscrire",
-                                      style: TextStyle(
-                                        color: Couleurs.accentOrange,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Pas encore de compte?"),
+                              SizedBox(width: 10.w),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Inscriptionscreen(),
                                     ),
+                                  );
+                                },
+                                child: Text(
+                                  "S'inscrire",
+                                  style: TextStyle(
+                                    color: Couleurs.accentOrange,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),

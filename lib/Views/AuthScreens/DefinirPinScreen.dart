@@ -18,29 +18,33 @@ class Definirpinscreen extends StatefulWidget {
 }
 
 class _DefinirpinscreenState extends State<Definirpinscreen> {
+  final TextEditingController _controllerPin = TextEditingController();
 
-  final TextEditingController _controllerPin =TextEditingController();
+  bool erreur = false;
+  String? messageErreur;
 
-  bool erreur=false;
+  Future<void> inscription(String password) async {
+    final authVm = context.read<Authviewmodel>();
 
-Future<void>inscription(String password)async{
-  final authVm=context.read<Authviewmodel>();
+    await authVm.sinscrir(widget.tempData.nomPrenom,
+        widget.tempData.email ?? '', widget.tempData.telephone, password);
 
-  await authVm.sinscrir(widget.tempData.nomPrenom, widget.tempData.email??'', widget.tempData.telephone, password);
+    if (!mounted) {
+      return;
+    }
 
-  if(authVm.errrorMessage==null){
-    print(authVm.session.toString());
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Dashboardscreen()), (route)=>false);
-  }else{
-    print(authVm.errrorMessage);
-    if(mounted){
+    if (authVm.errrorMessage == null) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboardscreen()),
+          (route) => false);
+    } else {
       setState(() {
-        erreur=true;
+        erreur = true;
+        messageErreur = authVm.errrorMessage;
       });
     }
   }
-
-}
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +91,7 @@ Future<void>inscription(String password)async{
                         ),
                         SizedBox(height: 20.h),
                         Text(
-                          "Veuillez saisir votre code pin",
+                          "Veuillez saisir votre code pin à 8 chiffres",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.grey[500],
@@ -96,27 +100,31 @@ Future<void>inscription(String password)async{
                         ),
                         SizedBox(height: 10.h),
                         Pinput(
-                          length: 6,
+                          length: 8,
                           obscureText: true,
                           obscuringCharacter: "●",
                           keyboardType: TextInputType.number,
                           controller: _controllerPin,
                         ),
-                        if(erreur)...[
-                          SizedBox(height: 5.h,),
-                          Text("Oups! Une erreur s'est produite. Veuillez réessayer",style: TextStyle(
-                            fontSize: 18.sp,
-                            color: Couleurs.emergencyRed,
-                            fontWeight: FontWeight.w500
-                          ),),
+                        if (erreur) ...[
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Text(
+                            messageErreur ??
+                                "Oups! Une erreur s'est produite. Veuillez réessayer",
+                            style: TextStyle(
+                                fontSize: 18.sp,
+                                color: Couleurs.emergencyRed,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ],
-
                         SizedBox(height: 12.h),
                         Row(
                           children: [
                             Expanded(
                               child: TextButton(
-                                onPressed: () async{
+                                onPressed: () async {
                                   await inscription(_controllerPin.text);
                                 },
                                 style: TextButton.styleFrom(

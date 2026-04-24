@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:data_loop/Models/Session.dart';
+import 'package:data_loop/Repositories/ApiConfig.dart';
 import 'package:data_loop/Repositories/AuthRepository.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +22,8 @@ class Authviewmodel extends ChangeNotifier {
 
   String? get errrorMessage => _errorMessage;
 
+  bool get chargementEnCour => _chargementEnCour;
+
   bool get estConnecte => _session != null;
 
   //4-initialisation
@@ -31,9 +32,6 @@ class Authviewmodel extends ChangeNotifier {
     String? numero = await _authrepository.recupererNumeroSauve();
     String? token = await _authrepository.getSecuredJWT();
 
-    print("=== INIT ===");
-    print("numero en cache: $numero");
-    print("token en cache: $token");
     // Le numéro est assigné dès qu'il existe, peu importe le token
     if (numero != null) {
       _numeroSauvegarder = numero;
@@ -41,11 +39,7 @@ class Authviewmodel extends ChangeNotifier {
 
     if (numero != null && token != null) {
       _session = await _authrepository.recupererProfil();
-      print(_session.toString());
     }
-
-    print("estConnecte: $estConnecte");
-    print("numeroSauvegarder: $_numeroSauvegarder");
 
     notifyListeners();
   }
@@ -65,18 +59,25 @@ class Authviewmodel extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    if (password.length < 8) {
+      _chargementEnCour = false;
+      _errorMessage = "Le code PIN doit contenir au moins 8 chiffres";
+      notifyListeners();
+      return;
+    }
     try {
       _session = await _authrepository.seConnecter(numeroSauve, password);
       if (_session?.jwt != null) {
-        //A modifier pour passer le numéro de l'utilisateur connecter
-        await _authrepository.sauvegarderNumero(numeroSauve);
-        _numeroSauvegarder = numeroSauve;
-        //A modifier pour passer le token format String
+        final numeroNormalise = ApiConfig.normaliserTelephone(numeroSauve);
+        await _authrepository.sauvegarderNumero(numeroNormalise);
+        _numeroSauvegarder = numeroNormalise;
         await _authrepository.secureJWT(_session!);
         _session?.removeJwt();
+      } else {
+        _errorMessage = "Identifiants incorrects ou compte introuvable";
       }
     } catch (e) {
-      _errorMessage = "Erreur lors de l'inscription";
+      _errorMessage = "Erreur lors de la connexion";
       print(e);
     } finally {
       _chargementEnCour = false;
@@ -101,12 +102,6 @@ class Authviewmodel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (email.isEmpty) {
-      _chargementEnCour = false;
-      _errorMessage = "le champ email est vide";
-      notifyListeners();
-      return;
-    }
     if (numero.isEmpty) {
       _chargementEnCour = false;
       _errorMessage = "le champ numero est vide";
@@ -119,17 +114,119 @@ class Authviewmodel extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    if (password.length < 8) {
+      _chargementEnCour = false;
+      _errorMessage = "Le code PIN doit contenir au moins 8 chiffres";
+      notifyListeners();
+      return;
+    }
 
     try {
-      _session = await _authrepository.sinscrir(nom, numero, email, password);
+      final numeroNormalise = ApiConfig.normaliserTelephone(numero);
+      _session = await _authrepository.sinscrir(
+        nom,
+        numeroNormalise,
+        email,
+        password,
+      );
 
-      //Enregistrer le numero pour la prochaine connexion
-      await _authrepository.sauvegarderNumero(numero);
-      _numeroSauvegarder=numero;
-      await _authrepository.secureJWT(_session!);
-      _session!.removeJwt();
+      if (_session?.jwt != null) {
+        await _authrepository.sauvegarderNumero(numeroNormalise);
+        _numeroSauvegarder = numeroNormalise;
+        await _authrepository.secureJWT(_session!);
+        _session!.removeJwt();
+      } else {
+        _errorMessage = "Inscription impossible avec les informations saisies";
+      }
     } catch (e) {
       _errorMessage = "Une erreur s'est produite lors de l'inscription";
+      print(e);
+    } finally {
+      _chargementEnCour = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> envoyerOtp(String numero) async {
+    _chargementEnCour = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    if (numero.isEmpty) {
+      _chargementEnCour = false;
+      _errorMessage = "le champ numero est vide";
+      notifyListeners();
+      return;
+    }
+
+    try {
+      final numeroNormalise = ApiConfig.normaliserTelephone(numero);
+      final success = await _authrepository.envoyerOtp(numeroNormalise);
+      if (success) {
+        await _authrepository.sauvegarderNumero(numeroNormalise);
+        _numeroSauvegarder = numeroNormalise;
+      } else {
+        _errorMessage = "Impossible d'envoyer le code OTP";
+      }
+    } catch (e) {
+      _errorMessage = "Une erreur s'est produite lors de l'envoi OTP";
+      print(e);
+    } finally {
+      _chargementEnCour = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> verifierOtp(String numero, String code) async {
+    _chargementEnCour = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    if (numero.isEmpty) {
+      _chargementEnCour = false;
+      _errorMessage = "le champ numero est vide";
+      notifyListeners();
+      return;
+    }
+
+    if (code.length != 6) {
+      _chargementEnCour = false;
+      _errorMessage = "Le code OTP doit contenir 6 chiffres";
+      notifyListeners();
+      return;
+    }
+
+    try {
+      final numeroNormalise = ApiConfig.normaliserTelephone(numero);
+      _session = await _authrepository.verifierOtp(numeroNormalise, code);
+
+      if (_session?.jwt != null) {
+        await _authrepository.sauvegarderNumero(numeroNormalise);
+        _numeroSauvegarder = numeroNormalise;
+        await _authrepository.secureJWT(_session!);
+        _session!.removeJwt();
+      } else {
+        _errorMessage = "Code OTP invalide ou compte introuvable";
+      }
+    } catch (e) {
+      _errorMessage = "Une erreur s'est produite lors de la vérification OTP";
+      print(e);
+    } finally {
+      _chargementEnCour = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> seDeconnecter() async {
+    _chargementEnCour = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _authrepository.seDeconnecter();
+      _session = null;
+    } catch (e) {
+      _errorMessage = "Une erreur s'est produite lors de la déconnexion";
       print(e);
     } finally {
       _chargementEnCour = false;

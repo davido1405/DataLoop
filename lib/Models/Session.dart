@@ -1,12 +1,12 @@
 class Session {
-  late final int id;
-  late final String nomUtilisateur;
-  late final String telephone;
-  late final String? email;
-  late final String role;
-  late final String? statut;
-  late final int? score_confiance;
-  late final int? solde_virtuel;
+  final int id;
+  final String nomUtilisateur;
+  final String telephone;
+  final String? email;
+  final String role;
+  final String? statut;
+  final num? score_confiance;
+  final num? solde_virtuel;
   String? jwt;
 
   Session({
@@ -23,16 +23,23 @@ class Session {
 
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
-      id: json['id'],
-      nomUtilisateur: json['name'],
-      telephone: json['telephone'],
-      email: json['email']??'Aucun email',
-      role: json['role'],
-      statut: json['statut'],
-      score_confiance: json['score_confiance'],
-      solde_virtuel: json['solde_virtuel'],
-      jwt: json['access_token']
+      id: _toNum(json['id'])?.toInt() ?? 0,
+      nomUtilisateur: json['name']?.toString() ?? 'Utilisateur',
+      telephone: json['telephone']?.toString() ?? '',
+      email: json['email']?.toString(),
+      role: json['role']?.toString() ?? '',
+      statut: json['statut']?.toString(),
+      score_confiance: _toNum(json['score_confiance']),
+      solde_virtuel: _toNum(json['solde_virtuel']),
+      jwt: json['access_token']?.toString(),
     );
+  }
+
+  static num? _toNum(dynamic value) {
+    if (value is num) {
+      return value;
+    }
+    return num.tryParse(value?.toString() ?? '');
   }
 
   @override
@@ -41,6 +48,6 @@ class Session {
   }
 
   void removeJwt() {
-    this.jwt = null;
+    jwt = null;
   }
 }

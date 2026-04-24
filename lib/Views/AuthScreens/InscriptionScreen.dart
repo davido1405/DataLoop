@@ -1,6 +1,5 @@
 import 'package:data_loop/Constantes/Couleurs.dart';
 import 'package:data_loop/Models/TempData.dart';
-import 'package:data_loop/Views/AuthScreens/ConfirmerNumeroScreen.dart';
 import 'package:data_loop/Views/AuthScreens/ConnexionScreen.dart';
 import 'package:data_loop/Views/AuthScreens/DefinirPinScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -181,34 +180,29 @@ class _InscriptionscreenState extends State<Inscriptionscreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Center(
-                            child: Expanded(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("Déjà un compte?"),
-                                  SizedBox(width: 10.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              Connexionscreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      "Se connecter",
-                                      style: TextStyle(
-                                        color: Couleurs.accentOrange,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Déjà un compte?"),
+                              SizedBox(width: 10.w),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Connexionscreen(),
                                     ),
+                                  );
+                                },
+                                child: Text(
+                                  "Se connecter",
+                                  style: TextStyle(
+                                    color: Couleurs.accentOrange,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),

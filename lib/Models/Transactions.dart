@@ -1,14 +1,14 @@
 class Transactions {
-  late final String id;
-  late final String utilisateurId;
-  late final String annotationId;
-  late final String typeTransaction;
-  late final String libelleTransaction;
-  late final String montantTransaction;
-  late final String soldeAvant;
-  late final String soldeApres;
-  late final String referenceTache;
-  late final String dateTransaction;
+  final String id;
+  final String utilisateurId;
+  final String annotationId;
+  final String typeTransaction;
+  final String libelleTransaction;
+  final String montantTransaction;
+  final String soldeAvant;
+  final String soldeApres;
+  final String referenceTache;
+  final String dateTransaction;
 
   Transactions({
     required this.id,
@@ -23,7 +23,18 @@ class Transactions {
     required this.dateTransaction,
   });
 
-  factory Transactions.fromJson(Map<String,dynamic>json){
-    return Transactions(id: json['id'], utilisateurId: json['utilisateur_id'], annotationId: json['annotation_id'], typeTransaction: json['type'], libelleTransaction: json['libelle'], montantTransaction: json['montant'], soldeAvant: json['solde_avant'], soldeApres: json['solde_apres'], referenceTache: json['reference_tache'], dateTransaction: json['created_at']);
+  factory Transactions.fromJson(Map<String, dynamic> json) {
+    return Transactions(
+      id: json['id']?.toString() ?? '',
+      utilisateurId: json['utilisateur_id']?.toString() ?? '',
+      annotationId: json['annotation_id']?.toString() ?? '',
+      typeTransaction: json['type']?.toString() ?? '',
+      libelleTransaction: json['libelle']?.toString() ?? 'Transaction',
+      montantTransaction: json['montant']?.toString() ?? '0',
+      soldeAvant: json['solde_avant']?.toString() ?? '0',
+      soldeApres: json['solde_apres']?.toString() ?? '0',
+      referenceTache: json['reference_tache']?.toString() ?? '',
+      dateTransaction: json['created_at']?.toString() ?? '',
+    );
   }
 }

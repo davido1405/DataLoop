@@ -1,13 +1,17 @@
 import 'package:data_loop/Views/DashboardScreen.dart';
+import 'package:data_loop/ViewsModels/AuthViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 
 import '../../Constantes/Couleurs.dart';
 
 class Confirmernumeroscreen extends StatefulWidget {
-  const Confirmernumeroscreen({super.key});
+  final String telephone;
+
+  const Confirmernumeroscreen({super.key, required this.telephone});
 
   @override
   State<Confirmernumeroscreen> createState() => _ConfirmernumeroscreenState();
@@ -15,9 +19,52 @@ class Confirmernumeroscreen extends StatefulWidget {
 
 class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
   final TextEditingController _controllerOTP = TextEditingController();
+  String? messageErreur;
+
+  Future<void> verifierOtp() async {
+    final authVM = context.read<Authviewmodel>();
+    await authVM.verifierOtp(widget.telephone, _controllerOTP.text);
+
+    if (!mounted) {
+      return;
+    }
+
+    if (authVM.errrorMessage == null) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboardscreen()),
+        (route) => false,
+      );
+    } else {
+      setState(() {
+        messageErreur = authVM.errrorMessage;
+      });
+    }
+  }
+
+  Future<void> renvoyerCode() async {
+    final authVM = context.read<Authviewmodel>();
+    await authVM.envoyerOtp(widget.telephone);
+
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            authVM.errrorMessage ?? "Nouveau code OTP envoyé",
+          ),
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authVM = context.watch<Authviewmodel>();
+
     return Scaffold(
       backgroundColor: Couleurs.lightGreen,
       appBar: AppBar(
@@ -61,7 +108,7 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                         ),
                         SizedBox(height: 20.h),
                         Text(
-                          "Veuillez saisir le code OTP reçu",
+                          "Veuillez saisir le code OTP reçu sur ${widget.telephone}",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.grey[500],
@@ -76,20 +123,24 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                           keyboardType: TextInputType.number,
                           controller: _controllerOTP,
                         ),
+                        if (messageErreur != null) ...[
+                          SizedBox(height: 8.h),
+                          Text(
+                            messageErreur!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Couleurs.emergencyRed,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                         SizedBox(height: 12.h),
                         Row(
                           children: [
                             Expanded(
                               child: TextButton(
-                                onPressed: () {
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Dashboardscreen(),
-                                    ),
-                                    (route) => false,
-                                  );
-                                },
+                                onPressed:
+                                    authVM.chargementEnCour ? null : verifierOtp,
                                 style: TextButton.styleFrom(
                                   backgroundColor: Couleurs.accentOrange,
                                   shape: RoundedRectangleBorder(
@@ -131,7 +182,12 @@ class _ConfirmernumeroscreenState extends State<Confirmernumeroscreen> {
                               Expanded(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  child: Text("Renvoyer un nouveau code"),
+                                  child: GestureDetector(
+                                    onTap: authVM.chargementEnCour
+                                        ? null
+                                        : renvoyerCode,
+                                    child: Text("Renvoyer un nouveau code"),
+                                  ),
                                 ),
                               ),
                             ],

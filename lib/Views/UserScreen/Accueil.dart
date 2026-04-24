@@ -1,4 +1,5 @@
 import 'package:data_loop/Views/UserScreen/HistoriqueGains.dart';
+import 'package:data_loop/ViewsModels/AnnotationViewModel.dart';
 import 'package:data_loop/ViewsModels/AuthViewModel.dart';
 import 'package:data_loop/ViewsModels/WalletViewModel.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,37 +17,134 @@ class Accueil extends StatefulWidget {
   State<Accueil> createState() => _AccueilState();
 }
 
-//Merdeeeeeeeeeee
 class _AccueilState extends State<Accueil> {
-
-
   @override
   void initState() {
     super.initState();
-    Future.microtask(()async{
-      await recupererWallet();
+    Future.microtask(() async {
+      await chargerAccueil();
     });
   }
+
   List<Taches> listeTaches = [];
 
-  String? soldeWallet="0";
+  String? soldeWallet = "0";
 
-Future<void>recupererWallet()async{
-  final walletVM=context.read<Walletviewmodel>();
-  await walletVM.init();
+  Future<void> chargerAccueil() async {
+    final walletVM = context.read<Walletviewmodel>();
+    final annotationVM = context.read<Annotationviewmodel>();
 
-  if(walletVM.errorMessage==null){
-    if(mounted){
+    await Future.wait([
+      walletVM.init(),
+      annotationVM.recupererHistoriqueTaches(),
+    ]);
+
+    if (mounted) {
       setState(() {
-        soldeWallet=walletVM.portefeuille!.solde;
+        soldeWallet = walletVM.portefeuille?.solde ?? "0";
+        listeTaches = annotationVM.historiqueTaches;
       });
     }
   }
-}
 
+  Future<void> demanderRetrait() async {
+    final montantController = TextEditingController();
+    String methodePaiement = "mobile_money_orange";
+
+    final confirmer = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text("Retirer mes gains"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: montantController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Montant",
+                  suffixText: "FCFA",
+                ),
+              ),
+              SizedBox(height: 12.h),
+              DropdownButtonFormField<String>(
+                value: methodePaiement,
+                decoration: InputDecoration(labelText: "Méthode de paiement"),
+                items: [
+                  DropdownMenuItem(
+                    value: "mobile_money_orange",
+                    child: Text("Orange Money"),
+                  ),
+                  DropdownMenuItem(
+                    value: "mobile_money_mtn",
+                    child: Text("MTN Mobile Money"),
+                  ),
+                  DropdownMenuItem(
+                    value: "mobile_money_moov",
+                    child: Text("Moov Money"),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    methodePaiement = value;
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text("Annuler"),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text("Confirmer"),
+            ),
+          ],
+        );
+      },
+    );
+
+    final montant = montantController.text.trim();
+    montantController.dispose();
+
+    if (confirmer != true || montant.isEmpty || !mounted) {
+      return;
+    }
+
+    final walletVM = context.read<Walletviewmodel>();
+    await walletVM.retrait(montant, methodePaiement);
+
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            walletVM.errorMessage ?? "Demande de retrait enregistrée",
+          ),
+        ),
+      );
+
+    if (walletVM.errorMessage == null) {
+      await chargerAccueil();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final session = context.watch<Authviewmodel>().session;
+    final objectifProgression = 25;
+    final tachesRealisees = listeTaches.length;
+    final progression = tachesRealisees > objectifProgression
+        ? objectifProgression
+        : tachesRealisees;
+
     return Scaffold(
       backgroundColor: Couleurs.lightGreen,
       body: SingleChildScrollView(
@@ -57,11 +155,12 @@ Future<void>recupererWallet()async{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
-                mainAxisSize:MainAxisSize.min,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                Text("Bienvenu"),
-                Text("Bonjour ${context.read<Authviewmodel>().session?.nomUtilisateur??'Utilisateur'}")
-              ],),
+                  Text("Bienvenue"),
+                  Text("Bonjour ${session?.nomUtilisateur ?? 'Utilisateur'}")
+                ],
+              ),
               //Carte du solde
               Padding(
                 padding: EdgeInsets.all(10.w),
@@ -111,9 +210,7 @@ Future<void>recupererWallet()async{
                           children: [
                             Expanded(
                               child: ElevatedButton.icon(
-                                onPressed: () {
-                                  print("Retrait de gain en cours...");
-                                },
+                                onPressed: demanderRetrait,
                                 label: Text(
                                   "Retirer mes gains",
                                   style: TextStyle(
@@ -207,7 +304,7 @@ Future<void>recupererWallet()async{
                                 ),
                               ),
                               Text(
-                                "47 tâches",
+                                "$tachesRealisees tâche${tachesRealisees > 1 ? 's' : ''}",
                                 style: TextStyle(
                                   fontSize: 35.sp,
                                   color: Colors.white,
@@ -242,7 +339,7 @@ Future<void>recupererWallet()async{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       LinearProgressIndicator(
-                        value: 60 / 100, //A dynamiser
+                        value: progression / objectifProgression,
                         color: Couleurs.accentOrange,
                         backgroundColor: Colors.grey[400],
                         borderRadius: BorderRadius.circular(12.r),
@@ -261,7 +358,7 @@ Future<void>recupererWallet()async{
                             ),
                           ),
                           Text(
-                            "10/25",
+                            "$progression/$objectifProgression",
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
@@ -277,7 +374,7 @@ Future<void>recupererWallet()async{
               SizedBox(height: 15.h),
               //CTA commencer une tâche
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Couleurs.darkGreen,
@@ -290,13 +387,13 @@ Future<void>recupererWallet()async{
                     leading: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.r)
-                      ),
+                          borderRadius: BorderRadius.circular(10.r)),
                       child: Padding(
                         padding: EdgeInsets.all(16.w),
                         child: Icon(
                           CupertinoIcons.lightbulb_fill,
-                          color: Couleurs.accentOrange,size: 25,
+                          color: Couleurs.accentOrange,
+                          size: 25,
                         ),
                       ),
                     ),
@@ -309,49 +406,55 @@ Future<void>recupererWallet()async{
                       ),
                     ),
                     subtitle: Text(
-                      "Rendez-vous dans 'Tâches' sur la barre de navigation pour démarrer une nouvelle tâche 😉",style: TextStyle(
-                      color: Colors.grey[200],fontSize: 18.sp,fontWeight: FontWeight.w500
-                    ),
+                      "Rendez-vous dans 'Tâches' sur la barre de navigation pour démarrer une nouvelle tâche 😉",
+                      style: TextStyle(
+                          color: Colors.grey[200],
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.all(8.0.w),
+                padding: EdgeInsets.all(8.0.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Liste des Tâches déjà réalisées",
+                    Text(
+                      "Liste des Tâches déjà réalisées",
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: Colors.grey[600],
                         fontSize: 18.sp,
-                      ),),
+                      ),
+                    ),
                     listeTaches.isEmpty
                         ? Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 5.w),
-                          child: Center(child: emptyTacheCard()),
-                        )
+                            padding: EdgeInsets.symmetric(
+                                vertical: 15.h, horizontal: 5.w),
+                            child: Center(child: emptyTacheCard()),
+                          )
                         : ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            cardTache(listeTaches[index]),
-                            if (index < listeTaches.length)
-                              Divider(
-                                height: 1,
-                                thickness: 0.5,
-                                color: Colors.grey,
-                              ),
-                          ],
-                        );
-                      },
-                      itemCount: listeTaches.length,
-                    ),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  cardTache(listeTaches[index]),
+                                  if (index < listeTaches.length - 1)
+                                    Divider(
+                                      height: 1,
+                                      thickness: 0.5,
+                                      color: Colors.grey,
+                                    ),
+                                ],
+                              );
+                            },
+                            itemCount: listeTaches.length,
+                          ),
                   ],
                 ),
               ),
-
             ],
           ),
         ),
@@ -374,13 +477,20 @@ Widget cardTache(Taches tache) {
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Padding(
-            padding:  EdgeInsets.all(8.0.w),
+            padding: EdgeInsets.all(8.0.w),
             child: Icon(CupertinoIcons.ticket_fill, color: Colors.white),
           ),
         ),
-        ListTile(
-          title: Text("${tache} - ${tache}"),
-          subtitle: Text("${tache} - ${tache}"),
+        Expanded(
+          child: ListTile(
+            title: Text(tache.question),
+            subtitle: Text(
+              [
+                if (tache.type_tache.isNotEmpty) tache.type_tache,
+                if (tache.statut.isNotEmpty) tache.statut,
+              ].join(" - "),
+            ),
+          ),
         ),
       ],
     ),
@@ -390,10 +500,9 @@ Widget cardTache(Taches tache) {
 Widget emptyTacheCard() {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(18.r),
-      boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 0.8)]
-    ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 0.8)]),
     child: Padding(
       padding: EdgeInsets.all(25.w),
       child: Column(
@@ -407,21 +516,30 @@ Widget emptyTacheCard() {
             ),
             child: Padding(
               padding: EdgeInsets.all(18.w),
-              child: Icon(CupertinoIcons.clear_circled, color: Colors.grey[600],size: 30,),
+              child: Icon(
+                CupertinoIcons.clear_circled,
+                color: Colors.grey[600],
+                size: 30,
+              ),
             ),
           ),
-          Text("Oups! Aucune tâche réalisée",
+          Text(
+            "Oups! Aucune tâche réalisée",
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.grey[600],
               fontSize: 18.sp,
-            ),),
-          Text("Veuillez commencez une tâche à l'écran 'Tâches' sur la barre de navigation",
+            ),
+          ),
+          Text(
+            "Veuillez commencez une tâche à l'écran 'Tâches' sur la barre de navigation",
             style: TextStyle(
               fontWeight: FontWeight.w400,
               color: Colors.grey[600],
               fontSize: 19.sp,
-            ),textAlign: TextAlign.center,),
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     ),
