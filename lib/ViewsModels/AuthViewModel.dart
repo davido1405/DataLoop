@@ -82,7 +82,7 @@ class Authviewmodel extends ChangeNotifier {
 
     notifyListeners();
 
-    if (nom.isEmpty || email.isEmpty || numero.isEmpty || password.isEmpty) {
+    if (nom.isEmpty) {
       _chargementEnCour = false;
       _errorMessage = "le champ nom est vide";
       notifyListeners();

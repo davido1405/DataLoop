@@ -8,13 +8,19 @@ import '../Models/Taches.dart';
 class Annotationrepository {
   String? baseUrl = dotenv.env['BASE_URL'];
 
-  Future<List<Taches>?> recupererTaches() async {
-    final url = Uri.parse("$baseUrl/api/v1/tasks");
+  Future<Taches?> recupererTaches() async {
+    final url = Uri.parse("$baseUrl/api/v1/tasks/next");
     final response = await get(
       url,
       headers: {"content-Type": "application/json"},
     );
-    if (response.statusCode == 200) {}
+    if (response.statusCode == 200) {
+      final donnee=jsonDecode(response.body);
+      List<dynamic>Tache=donnee['data'];
+      Taches tache=Tache.map((Tache)=>Taches.fromJson(Tache)) as Taches;
+
+      return tache;
+    }
   }
 
   Future<void> envoyerReponse(String id_tache, String reponse) async {

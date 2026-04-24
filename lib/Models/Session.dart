@@ -1,8 +1,40 @@
 class Session {
-late final String? jwt;
+  late final String id;
+  late final String nomUtilisateur;
+  late final String telephone;
+  late final String? email;
+  late final String role;
+  late final String statut;
+  late final int score_confiance;
+  late final int solde_virtuel;
+  late final String? jwt;
 
+  Session({
+    required this.id,
+    required this.nomUtilisateur,
+    required this.telephone,
+    this.email,
+    required this.role,
+    required this.statut,
+    required this.score_confiance,
+    required this.solde_virtuel,
+    this.jwt,
+  });
 
-void removeJwt(){
-  this.jwt=null;
-}
+  factory Session.fromJson(Map<String, dynamic> json) {
+    return Session(
+      id: json['id'],
+      nomUtilisateur: json['name'],
+      telephone: json['telephone'],
+      role: json['role'],
+      statut: json['statut'],
+      score_confiance: json['score_confiance'],
+      solde_virtuel: json['solde_virtuel'],
+      jwt: json['access_token']
+    );
+  }
+
+  void removeJwt() {
+    this.jwt = null;
+  }
 }
