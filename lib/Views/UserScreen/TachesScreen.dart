@@ -167,112 +167,117 @@ class _TachesscreenState extends State<Tachesscreen> {
               else if (taches != null)
                 annotationImage(taches!)
               else
-                emptyStateAnnotation(tacheVM.errorMessage),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: tacheVM.chargementEnCours
-                                ? null
-                                : () {
-                                    setState(() {
-                                      response = null;
-                                      _reponseAnnotation.clear();
-                                    });
-                                  },
-                            label: FittedBox(
-                              child: Text(
-                                "Annuler ma réponse",
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            icon: Icon(
-                              CupertinoIcons.refresh_bold,
-                              color: Colors.white,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Couleurs.grey,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed:
-                                tacheVM.chargementEnCours ? null : passerTache,
-                            label: FittedBox(
-                              child: Text(
-                                "Passer cette tâche",
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            icon: Icon(
-                              CupertinoIcons.forward_fill,
-                              color: Colors.white,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Couleurs.darkGreen,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: tacheVM.chargementEnCours
-                                ? null
-                                : validerReponse,
-                            label: FittedBox(
-                              child: Text(
-                                "Valider ma réponse",
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            icon: Icon(
-                              CupertinoIcons.paperplane_fill,
-                              color: Colors.white,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Couleurs.accentOrange,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                emptyStateAnnotation(
+                  tacheVM.errorMessage,
+                  onRetry: tacheVM.chargementEnCours ? null : fetchTachess,
                 ),
-              ),
+              if (taches != null)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: tacheVM.chargementEnCours
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        response = null;
+                                        _reponseAnnotation.clear();
+                                      });
+                                    },
+                              label: FittedBox(
+                                child: Text(
+                                  "Annuler ma réponse",
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              icon: Icon(
+                                CupertinoIcons.refresh_bold,
+                                color: Colors.white,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Couleurs.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: tacheVM.chargementEnCours
+                                  ? null
+                                  : passerTache,
+                              label: FittedBox(
+                                child: Text(
+                                  "Passer cette tâche",
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              icon: Icon(
+                                CupertinoIcons.forward_fill,
+                                color: Colors.white,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Couleurs.darkGreen,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: tacheVM.chargementEnCours
+                                  ? null
+                                  : validerReponse,
+                              label: FittedBox(
+                                child: Text(
+                                  "Valider ma réponse",
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              icon: Icon(
+                                CupertinoIcons.paperplane_fill,
+                                color: Colors.white,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Couleurs.accentOrange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
@@ -411,7 +416,7 @@ class _TachesscreenState extends State<Tachesscreen> {
     );
   }
 
-  Widget emptyStateAnnotation(String? message) {
+  Widget emptyStateAnnotation(String? message, {VoidCallback? onRetry}) {
     return Padding(
       padding: EdgeInsets.all(15.w),
       child: Container(
@@ -436,6 +441,19 @@ class _TachesscreenState extends State<Tachesscreen> {
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 14.h),
+              ElevatedButton.icon(
+                onPressed: onRetry,
+                icon: Icon(CupertinoIcons.refresh_bold),
+                label: Text("Réessayer"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Couleurs.darkGreen,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
                 ),
               ),
             ],

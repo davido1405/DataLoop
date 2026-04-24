@@ -32,11 +32,11 @@ class Annotationviewmodel extends ChangeNotifier {
     try {
       _tache = await _annotationrepository.recupererTaches();
       if (_tache == null) {
-        _errorMessage = "Aucune tâche disponible pour le moment";
+        _errorMessage = "Aucune tâche disponible côté serveur";
       }
     } catch (e) {
       print(e);
-      _errorMessage = "Aucune tache récupérées";
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
       _tache = null;
     } finally {
       _chargementEnCours = false;
