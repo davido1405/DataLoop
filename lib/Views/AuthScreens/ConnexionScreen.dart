@@ -1,4 +1,5 @@
 import 'package:data_loop/Views/AuthScreens/InscriptionScreen.dart';
+import 'package:data_loop/Views/AuthScreens/RecoverPin.dart';
 import 'package:data_loop/Views/DashboardScreen.dart';
 import 'package:data_loop/ViewsModels/AuthViewModel.dart';
 import 'package:flutter/material.dart';

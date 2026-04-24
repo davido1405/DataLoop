@@ -16,17 +16,20 @@ class Tachesscreen extends StatefulWidget {
 }
 
 class _TachesscreenState extends State<Tachesscreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask((){
+      fetchTachess;
+    });
+  }
   String? response;
   final TextEditingController _reponseAnnotation = TextEditingController();
 
   Taches? taches;
   DateTime? _debutTache;
 
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(fetchTachess);
-  }
 
   @override
   void dispose() {

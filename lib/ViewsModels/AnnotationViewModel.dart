@@ -24,7 +24,7 @@ class Annotationviewmodel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   //4-Initialisation
-  Future<Taches?> init() async {
+  Future<void> init() async {
     _chargementEnCours = true;
     _errorMessage = null;
     notifyListeners();
@@ -42,8 +42,6 @@ class Annotationviewmodel extends ChangeNotifier {
       _chargementEnCours = false;
       notifyListeners();
     }
-
-    return _tache;
   }
 
   //5-Actions
