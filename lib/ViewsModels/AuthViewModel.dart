@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class Authviewmodel extends ChangeNotifier {
   //1-Dépendances
-  Authrepository _authrepository;
+  final Authrepository _authrepository;
 
   Authviewmodel(this._authrepository);
 
@@ -30,15 +30,23 @@ class Authviewmodel extends ChangeNotifier {
     //Vérifier si y'a déjà un compte sur le telephone
     String? numero = await _authrepository.recupererNumeroSauve();
     String? token = await _authrepository.getSecuredJWT();
-    if (numero!.isNotEmpty && token!.isNotEmpty) {
-      Session? profil = await _authrepository.recupererProfil();
-      if (profil != null) {
-        _session = profil;
-      } else {
-        _session = null;
-        print("Aucun profil trouvé");
-      }
+
+    print("=== INIT ===");
+    print("numero en cache: $numero");
+    print("token en cache: $token");
+    // Le numéro est assigné dès qu'il existe, peu importe le token
+    if (numero != null) {
+      _numeroSauvegarder = numero;
     }
+
+    if (numero != null && token != null) {
+      _session = await _authrepository.recupererProfil();
+      print(_session.toString());
+    }
+
+    print("estConnecte: $estConnecte");
+    print("numeroSauvegarder: $_numeroSauvegarder");
+
     notifyListeners();
   }
 
@@ -51,35 +59,40 @@ class Authviewmodel extends ChangeNotifier {
     notifyListeners();
 
     String? numeroSauve = await _authrepository.recupererNumeroSauve();
-    if (numeroSauve!.isEmpty) {
+    if (numeroSauve == null) {
       _chargementEnCour = false;
       _errorMessage = "Aucun numero trouvé";
       notifyListeners();
-      return ;
+      return;
     }
     try {
       _session = await _authrepository.seConnecter(numeroSauve, password);
       if (_session?.jwt != null) {
         //A modifier pour passer le numéro de l'utilisateur connecter
-        await _authrepository.sauvegarderNumero("numero a passer");
+        await _authrepository.sauvegarderNumero(numeroSauve);
+        _numeroSauvegarder = numeroSauve;
         //A modifier pour passer le token format String
         await _authrepository.secureJWT(_session!);
         _session?.removeJwt();
       }
     } catch (e) {
-      _errorMessage="Erreur lors de l'inscription";
+      _errorMessage = "Erreur lors de l'inscription";
       print(e);
-    }finally{
-      _chargementEnCour=false;
+    } finally {
+      _chargementEnCour = false;
       notifyListeners();
     }
   }
 
   //S'inscrire
-  Future<void> sinscrir(String nom, String email, String numero, String password,) async {
+  Future<void> sinscrir(
+    String nom,
+    String email,
+    String numero,
+    String password,
+  ) async {
     _chargementEnCour = true;
     _errorMessage = null;
-
     notifyListeners();
 
     if (nom.isEmpty) {
@@ -106,22 +119,20 @@ class Authviewmodel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    
-    try{
-      _session=await _authrepository.sinscrir(nom, numero, email, password);
-      if(_session!.jwt != null){
-        //Enregistrer le numero pour la prochaine connexion
-        await _authrepository.sauvegarderNumero(numero);
-        //Enregistrer le token(à modifier plus tard)
-        await _authrepository.secureJWT(_session!);
-        //Supprimer le token de l'objet session
-        _session!.removeJwt();
-      }
-    }catch(e){
-      _errorMessage="Une erreur s'est produite lors de l'inscription";
+
+    try {
+      _session = await _authrepository.sinscrir(nom, numero, email, password);
+
+      //Enregistrer le numero pour la prochaine connexion
+      await _authrepository.sauvegarderNumero(numero);
+      _numeroSauvegarder=numero;
+      await _authrepository.secureJWT(_session!);
+      _session!.removeJwt();
+    } catch (e) {
+      _errorMessage = "Une erreur s'est produite lors de l'inscription";
       print(e);
-    }finally{
-      _chargementEnCour=false;
+    } finally {
+      _chargementEnCour = false;
       notifyListeners();
     }
   }

@@ -1,7 +1,10 @@
 import 'package:data_loop/Views/UserScreen/HistoriqueGains.dart';
+import 'package:data_loop/ViewsModels/AuthViewModel.dart';
+import 'package:data_loop/ViewsModels/WalletViewModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../../Constantes/Couleurs.dart';
 import '../../Models/Taches.dart';
@@ -15,7 +18,31 @@ class Accueil extends StatefulWidget {
 
 //Merdeeeeeeeeeee
 class _AccueilState extends State<Accueil> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(()async{
+      await recupererWallet();
+    });
+  }
   List<Taches> listeTaches = [];
+
+  String? soldeWallet="0";
+
+Future<void>recupererWallet()async{
+  final walletVM=context.read<Walletviewmodel>();
+  await walletVM.init();
+
+  if(walletVM.errorMessage==null){
+    if(mounted){
+      setState(() {
+        soldeWallet=walletVM.portefeuille!.solde;
+      });
+    }
+  }
+}
 
 
   @override
@@ -29,6 +56,12 @@ class _AccueilState extends State<Accueil> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Column(
+                mainAxisSize:MainAxisSize.min,
+                children: [
+                Text("Bienvenu"),
+                Text("Bonjour ${context.read<Authviewmodel>().session?.nomUtilisateur??'Utilisateur'}")
+              ],),
               //Carte du solde
               Padding(
                 padding: EdgeInsets.all(10.w),
@@ -66,7 +99,7 @@ class _AccueilState extends State<Accueil> {
                           ),
                         ),
                         Text(
-                          "2 350.0 FCFA",
+                          "$soldeWallet FCFA",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

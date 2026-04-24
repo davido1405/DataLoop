@@ -22,24 +22,14 @@ class Walletviewmodel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   //4-Initialisation
-  Future<String?> init(String id_utilisateur) async {
+  Future<String?> init() async {
     _chargementEnCours = true;
     _errorMessage = null;
     notifyListeners();
 
-    if (id_utilisateur.isEmpty) {
-      _chargementEnCours = false;
-      _errorMessage = "Identifiant utilisateur manquant";
-      notifyListeners();
-
-      return null;
-    }
-
     try {
-      String? soldeWallet = await _walletrepository.recupererWallet(
-        id_utilisateur,
-      );
-      return soldeWallet;
+      _portefeuille= await _walletrepository.recupererWallet();
+
     } catch (e) {
       _errorMessage =
           "Une erreur s'est produite lors de la récupération du solde wallet";

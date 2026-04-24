@@ -29,8 +29,10 @@ Future<void>inscription(String password)async{
   await authVm.sinscrir(widget.tempData.nomPrenom, widget.tempData.email??'', widget.tempData.telephone, password);
 
   if(authVm.errrorMessage==null){
+    print(authVm.session.toString());
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Dashboardscreen()), (route)=>false);
   }else{
+    print(authVm.errrorMessage);
     if(mounted){
       setState(() {
         erreur=true;
@@ -85,7 +87,7 @@ Future<void>inscription(String password)async{
                         ),
                         SizedBox(height: 20.h),
                         Text(
-                          "Veuillez saisir le code OTP reçu",
+                          "Veuillez saisir votre code pin",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.grey[500],

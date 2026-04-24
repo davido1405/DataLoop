@@ -13,11 +13,10 @@ class Splashscreen extends StatefulWidget {
 }
 
 class _SplashscreenState extends State<Splashscreen> {
-
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async {
+    Future.microtask(() async{
       await initialisationConnexion();
     });
   }
@@ -27,21 +26,25 @@ class _SplashscreenState extends State<Splashscreen> {
     final auth = context.read<Authviewmodel>();
 
     await auth.init();
-    if (auth.errrorMessage == null) {
-      if (auth.estConnecte) {
+    if (auth.estConnecte) {
+      if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Dashboardscreen()),
           (route) => false,
         );
-      } else {
-        if (auth.numeroSauvegarder != null) {
+      }
+    } else {
+      if (auth.numeroSauvegarder!=null) {
+        if (mounted) {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Connexionscreen()),
             (route) => false,
           );
-        } else {
+        }
+      } else {
+        if (mounted) {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Inscriptionscreen()),
@@ -67,9 +70,7 @@ class _SplashscreenState extends State<Splashscreen> {
               ),
               Container(
                 child: Column(
-                  children: [
-                    Center(child: CircularProgressIndicator()),
-                  ],
+                  children: [Center(child: CircularProgressIndicator())],
                 ),
               ),
             ],
